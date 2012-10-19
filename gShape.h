@@ -15,7 +15,7 @@ class gIntersection {
   bool _i;
  public:
   gIntersection();
-  gIntersection(double, double, const gVector, bool);
+  gIntersection(double, double, const gVector&, bool);
   gIntersection(const gIntersection&);
   bool intersected();
   gVector getNormal();
@@ -29,7 +29,7 @@ class gShape {
  protected:
   gMaterial *_m;
  public:
-  virtual gIntersection intersection(gRay);
+  virtual gIntersection intersection(gRay&);
   gShape ();
   gMaterial getMaterial ();
 };
@@ -39,9 +39,9 @@ class gSphere : public gShape{
   double _r;
   friend ostream& operator<<(ostream&, const gSphere&);
  public:
-  gSphere(gVector, double, gMaterial*);
-  gSphere(const gSphere &);
-  gIntersection intersection(gRay);  
+  gSphere(const gVector, double, gMaterial*);
+  gSphere(const gSphere&);
+  gIntersection intersection(gRay&);  
 };
 
 class gTriangle : public gShape{
@@ -51,7 +51,7 @@ class gTriangle : public gShape{
   friend ostream& operator<<(ostream&, const gTriangle&);
  public:
   gTriangle(const gPoint, const gPoint, const gPoint, gMaterial *);
-  gIntersection intersection(gRay);
+  gIntersection intersection(gRay&);
 };
 
 class gPlane : public gShape{
@@ -60,6 +60,6 @@ class gPlane : public gShape{
 
  public:
   gPlane(gVector, double, gMaterial *);
-  gIntersection intersection(gRay);
+  gIntersection intersection(gRay&);
   };
 #endif

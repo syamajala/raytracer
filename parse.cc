@@ -54,10 +54,10 @@ gCamera* Parser::parse(const char *file) {
 	gPoint pos; gVector color;
 	iss >> pos >> color;
 	(*l).push_front(new gPLight(pos, color));
-      } else if (cmd=="d") {
-	//gVector dir,rgb;
-	//iss >> dir >> rgb;
-	//	directionalLight(dir,rgb);
+      } else if (cmd=="s") {
+	gPoint pos; gVector dir, udir, color; double len;
+	iss >> pos >> dir >> udir >> len >> color;
+	(*l).push_front(new gARLight(pos, dir, udir, len, color));
       } else if (cmd=="a") {
 	gVector color;
 	iss >> color;

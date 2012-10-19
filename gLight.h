@@ -15,8 +15,8 @@ class gLight {
   gVector _color;  
  public:
   gVector getColor();
-  virtual gVector shading(gMaterial, gVector, gVector, gVector, list<gShape *>*);
-  virtual bool shadow(gRay, list<gShape *>*, double, double);
+  virtual gVector shading(gMaterial&, gVector&, gVector&, gVector&, list<gShape *>*);
+  virtual bool shadow(gRay&, list<gShape *>*, double, double);
   virtual gPoint getPos();
 };
 
@@ -25,8 +25,8 @@ class gALight : public gLight {
   gALight();
   gALight(const gVector);
   gALight(const gALight&);
-  gVector shading(gMaterial, gVector, gVector, gVector, list<gShape *>*);
-  bool shadow(gRay, list<gShape *>*, double, double);
+  gVector shading(gMaterial&, gVector&, gVector&, gVector&, list<gShape *>*);
+  bool shadow(gRay&, list<gShape *>*, double, double);
 };
 
 
@@ -36,9 +36,19 @@ class gPLight : public gLight {
   gPLight();
   gPLight(const gPoint, const gVector);
   gPLight(const gPLight&);
-  gVector shading(gMaterial, gVector, gVector, gVector, list<gShape *>*);
-  bool shadow(gRay, list<gShape *>*, double, double);
+  gVector shading(gMaterial&, gVector&, gVector&, gVector&, list<gShape *>*);
+  bool shadow(gRay&, list<gShape *>*, double, double);
   gPoint getPos();
+};
+
+class gARLight : public gLight {
+  gPoint _pos;
+  gVector _dir;
+  gVector _udir;
+  double _len;
+ public:
+  gARLight();
+  gARLight(gPoint, gVector, gVector, double, gVector);
 };
 
 #endif

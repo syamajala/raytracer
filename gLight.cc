@@ -6,11 +6,11 @@ gVector gLight::getColor() {
   return _color;
 }
 
-gVector gLight::shading(gMaterial m, gVector v1, gVector v2, gVector dd, list<gShape *> *shapes) {
+gVector gLight::shading(gMaterial& m, gVector& v1, gVector& v2, gVector& dd, list<gShape *> *shapes) {
   return gVector();
 }
 
-bool gLight::shadow(gRay r, list<gShape *> *shapes, double tmin, double tmax) {
+bool gLight::shadow(gRay& r, list<gShape *> *shapes, double tmin, double tmax) {
   return false;
 }
 
@@ -30,12 +30,12 @@ gALight::gALight(const gVector c) {
   _color = c;
 }
 
-gVector gALight::shading(gMaterial m, gVector v1, gVector v2, gVector dd, list<gShape *> *shapes) {    
+gVector gALight::shading(gMaterial& m, gVector& v1, gVector& v2, gVector& dd, list<gShape *> *shapes) {    
   gVector ka = m.getDiff();
   return gVector(ka[0]*_color[0], ka[1]*_color[1], ka[2]*_color[2]);
 }
 
-bool gALight::shadow(gRay r, list<gShape *> *shapes, double tmin, double tmax) {
+bool gALight::shadow(gRay& r, list<gShape *> *shapes, double tmin, double tmax) {
   return false;
 }
 
@@ -54,7 +54,7 @@ gPLight::gPLight(const gPLight &p) {
   _pos = p._pos;
 }
 
-gVector gPLight::shading(gMaterial m, gVector nn, gVector pp, gVector dd, list<gShape *>*shapes) {  gVector l = (gVector(_pos[0], _pos[1], _pos[2])-pp).normalize();
+gVector gPLight::shading(gMaterial& m, gVector& nn, gVector& pp, gVector& dd, list<gShape *>*shapes) {  gVector l = (gVector(_pos[0], _pos[1], _pos[2])-pp).normalize();
   gVector n = nn.normalize();
 
   gVector diffShading = gVector();
@@ -76,7 +76,7 @@ gVector gPLight::shading(gMaterial m, gVector nn, gVector pp, gVector dd, list<g
   return (diffShading + specShading);
 }
 
-bool gPLight::shadow(gRay r, list<gShape *>*shapes, double tmin, double tmax) {
+bool gPLight::shadow(gRay& r, list<gShape *>*shapes, double tmin, double tmax) {
   list <gShape *>::iterator s;
   for (s = (*shapes).begin(); s != (*shapes).end(); ++s) {
     gIntersection in = (*(*s)).intersection(r);    
@@ -92,4 +92,20 @@ bool gPLight::shadow(gRay r, list<gShape *>*shapes, double tmin, double tmax) {
 
 gPoint gPLight::getPos() {
   return _pos;
+}
+
+gARLight::gARLight() {
+  _pos = gPoint();
+  _dir = gVector();
+  _udir = gVector();
+  _len = 0;
+  _color = gVector();
+}
+
+gARLight::gARLight(gPoint p, gVector dir, gVector udir, double len, gVector color) {
+  _pos = p;
+  _dir = dir;
+  _udir = udir;
+  _len = len;
+  _color = color;
 }

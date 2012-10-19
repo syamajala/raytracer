@@ -10,7 +10,7 @@ gMaterial gShape::getMaterial() {
   return *_m;
 }
 
-gIntersection::gIntersection(double ip1, double ip2, const gVector v, bool i1) {
+gIntersection::gIntersection(double ip1, double ip2, const gVector& v, bool i1) {
   _t1 = ip1;
   _t2 = ip2;
   _n = v;
@@ -66,11 +66,11 @@ gIntersection& gIntersection::operator=(const gIntersection &i) {
   return *this;
 }
 
-gIntersection gShape::intersection(gRay r) {
+gIntersection gShape::intersection(gRay& r) {
   return gIntersection();
 }
 
-gSphere::gSphere (gVector pos1, double r1, gMaterial *m) {
+gSphere::gSphere (const gVector pos1, double r1, gMaterial *m) {
   _pos = pos1;
   _r = r1;
   _m = m;
@@ -81,7 +81,7 @@ gSphere::gSphere (const gSphere &s) {
   _r = s._r;
 }
 
-gIntersection gSphere::intersection(gRay r1) {
+gIntersection gSphere::intersection(gRay& r1) {
   gVector d = r1.getDir();
   gPoint p = r1.getOrigin();
   gVector p0 = gVector(p[0], p[1], p[2]);
@@ -131,7 +131,7 @@ ostream& operator<<(ostream& output, const gTriangle &t) {
   return output;
 }
 
-gIntersection gTriangle::intersection(gRay r) {
+gIntersection gTriangle::intersection(gRay& r) {
   gPoint e = r.getOrigin();
   gVector d = r.getDir();  
   double t0 = 0;
@@ -221,7 +221,7 @@ gPlane::gPlane (gVector n, double d, gMaterial *m) {
   _m = m;
 }
 
-gIntersection gPlane::intersection(gRay r) {
+gIntersection gPlane::intersection(gRay& r) {
   gVector d = r.getDir();
   gPoint p = r.getOrigin();
   gVector p0 = gVector(p[0], p[1], p[2]);

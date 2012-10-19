@@ -8,12 +8,12 @@ gRay::gRay() {
   _dir = gVector();
 }
 
-gRay::gRay (gPoint origin1, gPoint p1, gPoint p2) {
+gRay::gRay (gPoint& origin1, gPoint& p1, gPoint& p2) {
   _origin = origin1;
   _dir = (p2 - p1).normalize();
 }
 
-gRay::gRay (gPoint origin1, gVector dir1) {
+gRay::gRay (gPoint& origin1, gVector& dir1) {
   _origin = origin1;
   _dir = dir1.normalize();
 }
@@ -29,20 +29,6 @@ gPoint gRay::getOrigin () {
 
 gVector gRay::getDir () {
   return _dir;
-}
-
-gRay gCamera::compute_ray(int i, int j) {
-  double r = _width/2.0;
-  double l = -1 * r;
-  double t = _height/2.0;
-  double b = -1 *t;
-
-  double u1 = l + (r-l)*(i+.5)/_nx;
-  double v1 = t + (b-t)*(j+.5)/_ny;
-  gVector d = _w*-1*_d;
-  d = d + (u1*_u);
-  d = d + (v1*_v);
-  return gRay(_eye, ((-_d*_w)+(u1*_u)+(v1*_v)).normalize());
 }
 
 gCamera::gCamera (gPoint pos, gVector dir, double d1, double iw, double ih, int pw, int ph) {
@@ -87,18 +73,44 @@ gCamera::~gCamera() {
       delete *k;
       *k = NULL;
     }
+    delete _m;
     _m = NULL;
   }
 }
 
+gRay gCamera::compute_ray(int i, int j, int p, int q, int n) {
+  double r = _width/2.0;
+  double l = -1 * r;
+  double t = _height/2.0;
+  double b = -1 *t;
+
+  double pp = (p+((double) rand()/RAND_MAX))/n;
+  double qq = (q+((double) rand()/RAND_MAX))/n;
+  double u1 = l + (r-l)*(i+pp)/_nx;
+  double v1 = t + (b-t)*(j+qq)/_ny;
+  gVector d = _w*-1*_d;
+  d = d + (u1*_u);
+  d = d + (v1*_v);
+  gVector dir = ((-_d*_w)+(u1*_u)+(v1*_v)).normalize();
+  return gRay(_eye, dir);
+}
+
 void gCamera::render(const char *file) {
+  int n = 4;
   Array2D<Rgba> p(_ny, _nx);
   gLight *l = NULL;
+  gVector color = gVector();
   for (int y = 0; y < _ny; ++y) {
     for (int x = 0; x < _nx; ++x) {
-      gRay r = compute_ray(x, y);
       Rgba &px = p[y][x];  
-      gVector color = L(r, 0.0001, 100000.0, 3, 0, gVector(), l);
+      color = gVector();
+      for (int p = 0; p < n; p++) {
+      	for (int q = 0; q < n; q++) {	  
+	  gRay r = compute_ray(x, y, p, q, n);
+	  color = (color + L(r, 0.0001, 100000.0, 3, 0, gVector(), l));
+	}
+      }
+      color = ((double) 1/(n*n))*color;
       px.r = color[0];
       px.g = color[1];
       px.b = color[2];
@@ -150,10 +162,13 @@ gVector gCamera::L(gRay r, double tmin, double tmax, int recurse_limit, int type
     if (shadow.length() == 0)
       return gVector();
     gVector pp = gVector(p[0], p[1], p[2]);
-    c = c + (*(*l)).shading(m, bestI.getNormal(), pp, r.getDir(), _s);      
+    gVector n = bestI.getNormal();
+    gVector d = r.getDir();      
+    c = c + (*(*l)).shading(m, n, pp, d, _s);      
   }
 
-  c = c + _al.shading(m, gVector(), gVector(), gVector(), _s);
+  gVector zero = gVector();
+  c = c + _al.shading(m, zero, zero, zero, _s);
 
   if (m.getIdeal().length() == 0) 
     return c;

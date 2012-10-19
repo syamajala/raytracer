@@ -19,8 +19,8 @@ class gRay {
   gVector _dir;
  public:
   gRay ();
-  gRay (gPoint, gPoint, gPoint);
-  gRay (gPoint, gVector);
+  gRay (gPoint&, gPoint&, gPoint&);
+  gRay (gPoint&, gVector&);
   gRay (const gRay&);
   gPoint getOrigin();
   gVector getDir();
@@ -47,7 +47,7 @@ class gCamera {
  public:
   gCamera (gPoint, gVector, double, double, double, int, int);
   ~gCamera ();
-  gRay compute_ray(int, int);
+  gRay compute_ray(int, int, int, int, int);
   void render(const char*);
   void writeRgba (const Rgba*, const char*);
   void setShapes(list<gShape *>*);

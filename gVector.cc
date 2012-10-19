@@ -19,23 +19,23 @@ gVector::gVector (double x1, double y1, double z1) {
   _z = z1;
 }
 
-gVector gVector::operator+ (const gVector v) {
+gVector gVector::operator+ (const gVector& v) {
   return gVector (_x + v._x, _y + v._y, _z + v._z);
 }
 
-gVector gVector::operator- (const gVector v) {
+gVector gVector::operator- (const gVector& v) {
   return gVector (_x - v._x, _y - v._y, _z - v._z);
 }
 
-gVector gVector::operator* (const gVector v) {
+gVector gVector::operator* (const gVector& v) {
   return gVector (_y*v._z - _z*v._y, _z*v._x - _x*v._z, _x*v._y - _y*v._x);
 }
 
-gVector operator* (const gVector v, double n) {
+gVector operator* (const gVector& v, double n) {
   return gVector(v._x*n, v._y*n, v._z*n);
 }
 
-gVector operator* (double n, const gVector v) {
+gVector operator* (double n, const gVector& v) {
   return v*n;
 }
 
@@ -53,7 +53,7 @@ double gVector::operator[] (int i) {
   }
 }
 
-double gVector::dot (gVector v) {
+double gVector::dot (const gVector& v) {
   return (_x*v._x)+(_y*v._y)+(_z*v._z);
 }
 
