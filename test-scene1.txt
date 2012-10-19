@@ -1,0 +1,13 @@
+/ simple test scene file, all units in mm.
+
+
+/ a red material, w/ white specular highlight, no reflection
+m 0.7 0.0 0.0 0.5 0.5 0.5 100. 0.0 0.0 0.0
+
+w cube-tris.obj
+  
+/ one point light, white
+l p 0 10 10 1 1 1
+l p 10 0 10 1 1 1
+
+c 10 10 10 -10 -10 -10 35 35 25 640 480
