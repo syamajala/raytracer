@@ -16,6 +16,7 @@ class gPoint {
   gPoint(double, double, double);
   gPoint(const gPoint&);
   gPoint(gVector& v);
+  gPoint& operator= (const gPoint&); 
   gVector operator-(const gPoint&);
   double operator[](int i);
 };

@@ -73,19 +73,20 @@ gVector gPLight::shading(gMaterial& m, gVector& nn, gVector& pp, gVector& dd, li
       specShading = (ma*gVector(spec[0]*_color[0],spec[1]*_color[1],spec[2]*_color[2]));
     }
   }
-  return (diffShading + specShading);
+  double dist = dd.length();
+  return (1.0/(dist*dist))*(diffShading + specShading);
 }
 
-bool gPLight::shadow(gRay& r, list<gShape *>*shapes, double tmin, double tmax) {
+bool gPLight::shadow(gRay& r, list<gShape *>*shapes, double tmin, double tmax, int bbox) {
   list <gShape *>::iterator s;
   for (s = (*shapes).begin(); s != (*shapes).end(); ++s) {
-    gIntersection in = (*(*s)).intersection(r);    
+    gIntersection in = (*(*s)).intersection(r, bbox);    
     if (in.intersected() && 
 	(in.getT1() > tmin) &&
 	(in.getT2() > tmin) &&
 	(in.getT1() < tmax) &&
 	(in.getT2() < tmax))
-	return true;
+      return true;
   }
   return false;
 }
@@ -98,14 +99,74 @@ gARLight::gARLight() {
   _pos = gPoint();
   _dir = gVector();
   _udir = gVector();
+  _vdir = gVector();
   _len = 0;
   _color = gVector();
 }
 
 gARLight::gARLight(gPoint p, gVector dir, gVector udir, double len, gVector color) {
   _pos = p;
-  _dir = dir;
-  _udir = udir;
+  _dir = dir.normalize();
+  _udir = udir.normalize();
+  _vdir = (_udir*_dir).normalize();
   _len = len;
   _color = color;
+}
+
+gPoint gARLight::getPos() {
+  return _pos;
+}
+
+gVector gARLight::getDir() {
+  return _dir;
+}
+
+gVector gARLight::getUDir() {
+  return _udir;
+}
+
+gVector gARLight::getVDir() {
+  return _vdir;
+}
+
+bool gARLight::shadow(gRay& r, list<gShape *>*shapes, double tmin, double tmax, int bbox) {
+  list <gShape *>::iterator s;
+  for (s = (*shapes).begin(); s != (*shapes).end(); ++s) {
+    gIntersection in = (*(*s)).intersection(r, bbox);
+    if (in.intersected() && 
+        (in.getT1() > tmin) &&
+        (in.getT2() > tmin) &&
+        (in.getT1() < tmax) &&
+        (in.getT2() < tmax))
+      return true;
+  }
+  return false;
+}
+
+gVector gARLight::shading(gMaterial& m, gVector& nn, gVector& pp, gVector& dd, list<gShape *>*shapes) {  gVector l = (gVector(_pos[0], _pos[1], _pos[2])-pp).normalize();
+  gVector n = nn.normalize();
+
+  gVector diffShading = gVector();
+  if (n.dot(l) > 0) {
+    gVector diff = m.getDiff();
+    double ma2 = max(0.0, n.dot(l));
+    diffShading = (ma2*gVector(diff[0]*_color[0], diff[1]*_color[1], diff[2]*_color[2]));
+  }
+
+  gVector h = (l + ((-1*dd).normalize())).normalize();
+  gVector specShading = gVector();
+  if (h.length() > 0) {
+    if (n.dot(h) > 0) {
+      gVector spec = m.getSpec();
+      double ma = pow(max(0.0, n.dot(h)), m.getPhong());
+      specShading = (ma*gVector(spec[0]*_color[0],spec[1]*_color[1],spec[2]*_color[2]));
+    }
+  }
+
+  double dddotdir = ((-1*dd).normalize()).dot(_dir.normalize());
+  return dddotdir*(1.0/(_len*_len))*(diffShading + specShading);
+}
+
+double gARLight::getLen() {
+  return _len;
 }

@@ -37,7 +37,7 @@ class gPLight : public gLight {
   gPLight(const gPoint, const gVector);
   gPLight(const gPLight&);
   gVector shading(gMaterial&, gVector&, gVector&, gVector&, list<gShape *>*);
-  bool shadow(gRay&, list<gShape *>*, double, double);
+  bool shadow(gRay&, list<gShape *>*, double, double, int);
   gPoint getPos();
 };
 
@@ -45,10 +45,18 @@ class gARLight : public gLight {
   gPoint _pos;
   gVector _dir;
   gVector _udir;
+  gVector _vdir;
   double _len;
  public:
   gARLight();
   gARLight(gPoint, gVector, gVector, double, gVector);
+  gPoint getPos();
+  gVector getDir();
+  gVector getUDir();
+  gVector getVDir();
+  double getLen();
+  gVector shading(gMaterial&, gVector&, gVector&, gVector&, list<gShape *>*);
+  bool shadow(gRay&, list<gShape *>*, double, double, int);
 };
 
 #endif

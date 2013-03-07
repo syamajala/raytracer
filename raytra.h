@@ -43,18 +43,20 @@ class gCamera {
   list <gShape *> *_s;
   list <gLight *> *_l;
   list <gMaterial *> *_m;
+  list <gARLight *> *_arl;
   gALight _al;
  public:
   gCamera (gPoint, gVector, double, double, double, int, int);
   ~gCamera ();
   gRay compute_ray(int, int, int, int, int);
-  void render(const char*);
+  void render(const char*, int, int, int);
   void writeRgba (const Rgba*, const char*);
   void setShapes(list<gShape *>*);
   void setLights(list<gLight *>*);
+  void setARL(list <gARLight *>*);
   void setMaterials(list<gMaterial *>*);
   void setAL(const gALight);  
-  gVector L(gRay, double, double, int, int, gVector, gLight *);
+  gVector L(gRay, double, double, int, int, gVector, gLight *, int, int);
 };
 
 #endif 

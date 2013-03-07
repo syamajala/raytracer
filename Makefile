@@ -1,6 +1,6 @@
 CC = g++
 CFLAGS = -g -I. -I/usr/include/OpenEXR -Wall
-LDFLAGS = -g -lIlmImf -lImath -lHalf -Wall
+LDFLAGS = -g -lpthread -lIlmImf -lImath -lHalf -Wall
 
 #all: clean raytra
 all: clean raytra
@@ -9,7 +9,7 @@ all: clean raytra
 #	$(CC) $(LDFLAGS) raytra.o gVector.o gPoint.o parse.o gShape.o gMaterial.o gLight.o -o raytra
 
 raytra:
-	g++ -g *.cc -I. -I/usr/include/OpenEXR -lIlmImf -lImath -lHalf -Wall -o raytra
+	g++ -g *.cc -I. -I/usr/include/OpenEXR -lIlmImf -lImath -lHalf -lpthread -Wall -o raytra
 
 raytra.o: raytra.cc raytra.h 
 	$(CC) $(CFLAGS) -c raytra.cc

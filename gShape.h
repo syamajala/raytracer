@@ -25,13 +25,27 @@ class gIntersection {
   gIntersection& operator= (const gIntersection&);
 };
 
+class gBBox {
+  gPoint _pmin;
+  gPoint _pmax;
+ public:
+  gBBox();
+  gBBox(gPoint, gPoint);
+  gIntersection intersection(gRay&);
+  gPoint getPmin();
+  gPoint getPmax();
+  void pushOut();
+};
+
 class gShape {
  protected:
   gMaterial *_m;
+  gBBox _box;
  public:
-  virtual gIntersection intersection(gRay&);
+  virtual gIntersection intersection(gRay&, int bbox);
   gShape ();
   gMaterial getMaterial ();
+  gIntersection checkBox(gRay&);
 };
 
 class gSphere : public gShape{
@@ -41,7 +55,7 @@ class gSphere : public gShape{
  public:
   gSphere(const gVector, double, gMaterial*);
   gSphere(const gSphere&);
-  gIntersection intersection(gRay&);  
+  gIntersection intersection(gRay&, int bbox);  
 };
 
 class gTriangle : public gShape{
@@ -50,16 +64,17 @@ class gTriangle : public gShape{
   gPoint _p3;
   friend ostream& operator<<(ostream&, const gTriangle&);
  public:
-  gTriangle(const gPoint, const gPoint, const gPoint, gMaterial *);
-  gIntersection intersection(gRay&);
+  gTriangle(gPoint, gPoint, gPoint, gMaterial*);
+  gIntersection intersection(gRay&, int bbox);
 };
 
 class gPlane : public gShape{
   gVector _n;
   double _d;
-
  public:
-  gPlane(gVector, double, gMaterial *);
-  gIntersection intersection(gRay&);
-  };
+  gPlane(gVector, double, gMaterial*);
+  gIntersection intersection(gRay&, int bbox);
+};
+
+
 #endif

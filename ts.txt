@@ -1,0 +1,22 @@
+/ simple test scene file, all units in mm.
+ 
+/ a red material, w/ white specular highlight, no reflection
+m 0.7 0.0 0.0 0.5 0.5 0.5 100. 0.0 0.0 0.0
+w star.obj
+
+/ one sphere in the above material
+m 1 .54 0 0.5 0.5 0.5 100 0.0 0.0 0.0 
+s -4.47 0 3.47 4
+ 
+/ a grey ground plane made up of two triangles, no specular, no reflection
+/t -500.00 -0.00 500.00 500.00 -0.00 500.00 -500.00 0.00 -500.00
+/t -500.00 0.00 -500.00 500.00 -0.00 500.00 500.00 0.00 -500.00
+ 
+/ one point light, white
+l p 6. 0. 6 1 1 1
+l p -6 0 -6 1 1 1
+/l a .5 .5 .5
+/ camera: pointing towards -Z, 35mmx25mm "film", 35mm focal length
+/ making 160x120 pixels
+/c 4 -5 4 -4.0 0.0 -3.0 10.0 55.0 55.0 320 240
+c 4 -5 4 -4.0 -4.0 -3.0 10.0 55.0 55.0 320 240

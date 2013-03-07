@@ -19,6 +19,7 @@ gCamera* Parser::parse(const char *file) {
   list<gShape *> *s = new list<gShape *>;
   list<gMaterial *> *m = new list<gMaterial *>;
   list<gLight *> *l = new list<gLight *>;
+  list<gARLight *> *arl = new list<gARLight *>;
   gALight al;
   gCamera *c = NULL;
   for (int line=1; in.good(); line++) {
@@ -57,7 +58,7 @@ gCamera* Parser::parse(const char *file) {
       } else if (cmd=="s") {
 	gPoint pos; gVector dir, udir, color; double len;
 	iss >> pos >> dir >> udir >> len >> color;
-	(*l).push_front(new gARLight(pos, dir, udir, len, color));
+	(*arl).push_front(new gARLight(pos, dir, udir, len, color));
       } else if (cmd=="a") {
 	gVector color;
 	iss >> color;
@@ -81,6 +82,7 @@ gCamera* Parser::parse(const char *file) {
   (*c).setAL(al);
   (*c).setLights(l);
   (*c).setMaterials(m);
+  (*c).setARL(arl);
   in.close();
   return c;
 }

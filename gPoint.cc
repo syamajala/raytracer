@@ -52,3 +52,13 @@ ostream& operator<<(ostream& output, const gPoint &p) {
   output << "(" << p._x << ", " << p._y << ", " << p._z << ")";
   return output;
 }
+
+gPoint& gPoint::operator=(const gPoint &p) {
+  if (this == &p)
+    return *this;
+  
+  _x = p._x;
+  _y = p._y;
+  _z = p._z;
+  return *this;
+}
